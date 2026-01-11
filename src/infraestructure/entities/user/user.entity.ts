@@ -26,7 +26,7 @@ export class User extends BaseEntity {
   @Column()
   fullName: string;
 
-  @Column()
+  @Column({ select: false })
   hashedPassword: string;
 
   @Column({

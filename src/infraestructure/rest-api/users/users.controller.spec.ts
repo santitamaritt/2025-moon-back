@@ -19,6 +19,10 @@ import {
   IUserReviewService,
   IUserReviewServiceToken,
 } from 'src/domain/interfaces/user-review.interface';
+import {
+  IDiscountCouponService,
+  IDiscountCouponServiceToken,
+} from 'src/domain/interfaces/discount-coupon-service.interface';
 
 describe('UsersController', () => {
   let controller: UsersController;
@@ -27,6 +31,8 @@ describe('UsersController', () => {
     mockDeep<IPasswordRecoveryService>();
   const userReviewServiceMock: MockProxy<IUserReviewService> =
     mockDeep<IUserReviewService>();
+  const discountCouponServiceMock: MockProxy<IDiscountCouponService> =
+    mockDeep<IDiscountCouponService>();
 
   beforeEach(async () => {
     jest.clearAllMocks();
@@ -42,6 +48,10 @@ describe('UsersController', () => {
         {
           provide: IUserReviewServiceToken,
           useValue: userReviewServiceMock,
+        },
+        {
+          provide: IDiscountCouponServiceToken,
+          useValue: discountCouponServiceMock,
         },
       ],
     }).compile();

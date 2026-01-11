@@ -62,7 +62,9 @@ export class UsersService implements IUsersService {
     userPayload: JwtPayload,
     dto: UpdateUserPasswordDto,
   ): Promise<void> {
-    const user = await this.usersRepository.findByIdOrThrow(userPayload.id);
+    const user = await this.usersRepository.findByIdOrThrowWithPassword(
+      userPayload.id,
+    );
     if (
       !(await this.hashService.verify(dto.currentPassword, user.hashedPassword))
     ) {
@@ -87,13 +89,13 @@ export class UsersService implements IUsersService {
     return { token };
   }
 
-  async create(dto: CreateUserDto) {
+  async create(dto: CreateUserDto): Promise<User> {
     const conflictingUser = await this.usersRepository.findByEmail(dto.email);
     if (conflictingUser) {
       throw new HttpException('email already existing', HttpStatus.CONFLICT);
     }
 
-    return this.usersRepository.save({
+    const created = await this.usersRepository.save({
       address: dto.address,
       addressLatitude: dto.addressLatitude,
       addressLongitude: dto.addressLongitude,
@@ -103,10 +105,12 @@ export class UsersService implements IUsersService {
       workshopName: dto.workshopName,
       userRole: dto.userRole,
     });
+
+    return this.usersRepository.findByIdOrThrow(created.id);
   }
 
   async login(dto: LoginUserDto) {
-    const user = await this.usersRepository.findByEmail(dto.email);
+    const user = await this.usersRepository.findByEmailWithPassword(dto.email);
     if (
       !user ||
       !(await this.hashService.verify(dto.password, user?.hashedPassword))

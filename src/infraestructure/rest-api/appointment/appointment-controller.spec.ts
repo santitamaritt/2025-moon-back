@@ -150,6 +150,7 @@ describe('AppointmentController', () => {
         [service],
         workshop,
         { id: 9 },
+        undefined,
       );
       expect(result).toBe(appointment);
     });
