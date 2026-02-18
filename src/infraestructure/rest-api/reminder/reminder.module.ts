@@ -11,5 +11,6 @@ import { IReminderServiceToken } from 'src/domain/interfaces/reminder-service.in
     { provide: IReminderRepositoryToken, useClass: ReminderRepository },
     { provide: IReminderServiceToken, useClass: ReminderService },
   ],
+  exports: [IReminderRepositoryToken, IReminderServiceToken],
 })
 export class ReminderModule {}

@@ -40,6 +40,6 @@ import { UserReviewRepository } from 'src/infraestructure/repositories/user-revi
     { provide: IDiscountCouponServiceToken, useClass: DiscountCouponService },
     { provide: IUserReviewRepositoryToken, useClass: UserReviewRepository },
   ],
-  exports: [IAppointmentServiceToken],
+  exports: [IAppointmentServiceToken, IAppointmentRepositoryToken],
 })
 export class AppointmentModule {}

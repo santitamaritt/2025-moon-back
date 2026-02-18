@@ -53,6 +53,15 @@ export class EmailService implements IEmailService {
     }
   }
 
+  async sendNotification(to: string, subject: string, html: string) {
+    await this.transporter.sendMail({
+      from: this.from,
+      to,
+      subject,
+      html,
+    });
+  }
+
   @OnEvent(APPOINTMENT_EVENTS.STATUS_CHANGED)
   async createNotification(event: AppointmentStatusChangedEvent) {
     const message = event.getMessage();

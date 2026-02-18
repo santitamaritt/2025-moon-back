@@ -51,7 +51,7 @@ import { UsersTokenService } from 'src/domain/services/users/users-token.service
     ConfigModule,
     ExpenseTrackerModule,
   ],
-  exports: [IUsersServiceToken, IUsersTokenServiceToken],
+  exports: [IUsersServiceToken, IUsersTokenServiceToken, IEmailServiceToken],
   controllers: [UsersController],
   providers: [
     { provide: IUsersRepositoryToken, useClass: UsersRepository },

@@ -53,6 +53,9 @@ export class Appointment extends BaseEntity {
   vehicle: Vehicle;
 
   @Column({ type: 'int', nullable: true })
+  kmAtService: number | null;
+
+  @Column({ type: 'int', nullable: true })
   originalPrice: number | null;
 
   @Column({ type: 'int', nullable: true })

@@ -1,15 +1,18 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { IVehicleService } from 'src/domain/interfaces/vehicle-service.interface';
+import {
+  type IAppointmentService,
+  IAppointmentServiceToken,
+} from 'src/domain/interfaces/appointment-service.interface';
+import { VEHICLE_EVENTS } from 'src/domain/events/vehicles/vehicle-events';
+import { VehicleKmUpdatedEvent } from 'src/domain/events/vehicles/vehicle-km-updated-event';
 import { JwtPayload } from 'src/infraestructure/dtos/shared/jwt-payload.interface';
 import { Vehicle } from 'src/infraestructure/entities/vehicle/vehicle.entity';
 import {
   type IVehicleRepository,
   IVehicleRepositoryToken,
 } from 'src/infraestructure/repositories/interfaces/vehicle-repository.interface';
-import { IVehicleService } from 'src/domain/interfaces/vehicle-service.interface';
-import {
-  type IAppointmentService,
-  IAppointmentServiceToken,
-} from 'src/domain/interfaces/appointment-service.interface';
 
 @Injectable()
 export class VehicleService implements IVehicleService {
@@ -18,6 +21,7 @@ export class VehicleService implements IVehicleService {
     private readonly vehicleRepository: IVehicleRepository,
     @Inject(IAppointmentServiceToken)
     private readonly appointmentService: IAppointmentService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   private async validateLicensePlate(licensePlate: string): Promise<void> {
@@ -69,11 +73,20 @@ export class VehicleService implements IVehicleService {
     if (updates.licensePlate && vehicle.licensePlate !== updates.licensePlate) {
       await this.validateLicensePlate(updates.licensePlate);
     }
-    return this.vehicleRepository.updateVehicleOfUser({
+    const updatedVehicle = await this.vehicleRepository.updateVehicleOfUser({
       userId,
       vehicleId,
       ...updates,
     });
+
+    if (typeof updates.km === 'number' && updates.km !== vehicle.km) {
+      this.eventEmitter.emit(
+        VEHICLE_EVENTS.KM_UPDATED,
+        new VehicleKmUpdatedEvent(userId, vehicleId, updatedVehicle.km),
+      );
+    }
+
+    return updatedVehicle;
   }
 
   getByLicensePlate(licensePlate: string): Promise<Vehicle | null> {
