@@ -27,6 +27,11 @@ export class ReminderController {
     private readonly reminderService: IReminderService,
   ) {}
 
+  @Get('/user/expiring')
+  getUserExpiringReminders(@AuthenticatedUser() user: JwtPayload) {
+    return this.reminderService.getUserExpiringReminders(user.id);
+  }
+
   @Get('/user/:userId')
   getUserReminders(@Param('userId', new ParseIntPipe()) userId: number) {
     return this.reminderService.getUserReminders(userId);
