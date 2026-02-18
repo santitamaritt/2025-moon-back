@@ -13,6 +13,7 @@ import { User } from '../user/user.entity';
 import { Vehicle } from '../vehicle/vehicle.entity';
 import { AppointmentStatus } from './appointment-status.enum';
 import { DiscountCoupon } from '../user/discount-coupon.entity';
+import { VehicleStatusEnum } from '../vehicle/vehicle-type.enum';
 
 @Entity('appointments')
 export class Appointment extends BaseEntity {
@@ -54,6 +55,9 @@ export class Appointment extends BaseEntity {
 
   @Column({ type: 'int', nullable: true })
   kmAtService: number | null;
+
+  @Column({ type: 'enum', enum: VehicleStatusEnum, nullable: true })
+  vehicleStatusAtService: VehicleStatusEnum | null;
 
   @Column({ type: 'int', nullable: true })
   originalPrice: number | null;

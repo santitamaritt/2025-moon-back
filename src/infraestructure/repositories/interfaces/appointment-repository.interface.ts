@@ -1,6 +1,7 @@
 import { Appointment } from 'src/infraestructure/entities/appointment/appointment.entity';
 import { IBaseRepository } from './base-repository.interface';
 import { AppointmentStatus } from 'src/infraestructure/entities/appointment/appointment-status.enum';
+import { VehicleStatusEnum } from 'src/infraestructure/entities/vehicle/vehicle-type.enum';
 
 export interface CreateAppointmentData {
   userId: number;
@@ -27,6 +28,11 @@ export interface IAppointmentRepository extends IBaseRepository<Appointment> {
   setKmAtServiceIfNull(
     appointmentId: number,
     kmAtService: number,
+  ): Promise<void>;
+
+  setVehicleStatusAtServiceIfNull(
+    appointmentId: number,
+    vehicleStatusAtService: VehicleStatusEnum,
   ): Promise<void>;
 
   findLastCompletedAppointmentForService(params: {

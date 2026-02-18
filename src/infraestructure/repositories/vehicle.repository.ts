@@ -78,6 +78,7 @@ export class VehicleRepository
     if (data.model !== undefined) vehicle.model = data.model;
     if (data.year !== undefined) vehicle.year = data.year;
     if (data.km !== undefined) vehicle.km = data.km;
+    if (data.status !== undefined) vehicle.status = data.status;
 
     return this.save(vehicle);
   }

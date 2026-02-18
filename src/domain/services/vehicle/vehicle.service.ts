@@ -9,6 +9,7 @@ import { VEHICLE_EVENTS } from 'src/domain/events/vehicles/vehicle-events';
 import { VehicleKmUpdatedEvent } from 'src/domain/events/vehicles/vehicle-km-updated-event';
 import { JwtPayload } from 'src/infraestructure/dtos/shared/jwt-payload.interface';
 import { Vehicle } from 'src/infraestructure/entities/vehicle/vehicle.entity';
+import { VehicleStatusEnum } from 'src/infraestructure/entities/vehicle/vehicle-type.enum';
 import {
   type IVehicleRepository,
   IVehicleRepositoryToken,
@@ -67,7 +68,9 @@ export class VehicleService implements IVehicleService {
   async updateVehicleOfUser(
     userId: number,
     vehicleId: number,
-    updates: Partial<Pick<Vehicle, 'licensePlate' | 'model' | 'year' | 'km'>>,
+    updates: Partial<
+      Pick<Vehicle, 'licensePlate' | 'model' | 'year' | 'km' | 'status'>
+    >,
   ): Promise<Vehicle> {
     const vehicle = await this.vehicleRepository.getById(vehicleId);
     if (updates.licensePlate && vehicle.licensePlate !== updates.licensePlate) {
@@ -87,6 +90,15 @@ export class VehicleService implements IVehicleService {
     }
 
     return updatedVehicle;
+  }
+
+  async updateVehicleStatusByMechanic(
+    vehicleId: number,
+    status: VehicleStatusEnum,
+  ): Promise<Vehicle> {
+    const vehicle = await this.vehicleRepository.getById(vehicleId);
+    vehicle.status = status;
+    return this.vehicleRepository.save(vehicle);
   }
 
   getByLicensePlate(licensePlate: string): Promise<Vehicle | null> {

@@ -1,5 +1,6 @@
 import { Vehicle } from 'src/infraestructure/entities/vehicle/vehicle.entity';
 import { IBaseRepository } from './base-repository.interface';
+import { VehicleStatusEnum } from 'src/infraestructure/entities/vehicle/vehicle-type.enum';
 
 export interface CreateVehicleData {
   userId: number;
@@ -16,6 +17,7 @@ export interface UpdateVehicleData {
   model?: string;
   year?: number;
   km?: number;
+  status?: VehicleStatusEnum | null;
 }
 
 export interface IVehicleRepository extends IBaseRepository<Vehicle> {

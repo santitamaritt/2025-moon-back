@@ -301,6 +301,17 @@ export class AppointmentService implements IAppointmentService {
       );
     }
 
+    if (
+      event.appointment.vehicleStatusAtService == null &&
+      event.appointment.vehicle &&
+      event.appointment.vehicle.status != null
+    ) {
+      await this.appointmentRepository.setVehicleStatusAtServiceIfNull(
+        event.appointment.id,
+        event.appointment.vehicle.status,
+      );
+    }
+
     const token = await this.usersTokenService.getTokenOrThrow(
       event.triggeredBy.id,
     );
