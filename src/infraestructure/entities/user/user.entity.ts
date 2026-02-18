@@ -14,6 +14,7 @@ import { Service } from '../service/service.entity';
 import { Notification } from '../notification/notification.entity';
 import { Goal } from '../goals/goal.entity';
 import { UserToken } from './user-tokens';
+import { Reminder } from '../reminder/reminder.entity';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -67,4 +68,7 @@ export class User extends BaseEntity {
 
   @OneToOne(() => UserToken, (token) => token.user)
   token: UserToken;
+
+  @OneToMany(() => Reminder, (reminder) => reminder.user)
+  reminders: Reminder[];
 }
