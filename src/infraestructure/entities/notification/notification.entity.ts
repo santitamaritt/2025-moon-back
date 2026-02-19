@@ -13,6 +13,9 @@ export class Notification extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ type: 'text', nullable: true })
+  dedupeKey: string | null;
+
   @Column()
   message: string;
 

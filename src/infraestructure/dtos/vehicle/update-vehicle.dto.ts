@@ -1,4 +1,5 @@
-import { IsNumber, IsString, Min, IsOptional } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, IsString, Min } from 'class-validator';
+import { VehicleStatusEnum } from 'src/infraestructure/entities/vehicle/vehicle-type.enum';
 
 export class UpdateVehicleDto {
   @IsString()
@@ -17,4 +18,8 @@ export class UpdateVehicleDto {
   @IsOptional()
   @Min(0)
   km: number;
+
+  @IsOptional()
+  @IsEnum(VehicleStatusEnum)
+  status?: VehicleStatusEnum;
 }

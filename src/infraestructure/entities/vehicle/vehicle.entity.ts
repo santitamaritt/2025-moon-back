@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { User } from '../user/user.entity';
 import { Appointment } from '../appointment/appointment.entity';
+import { VehicleStatusEnum } from './vehicle-type.enum';
 
 @Entity('users_vehicles')
 export class Vehicle extends BaseEntity {
@@ -27,6 +28,9 @@ export class Vehicle extends BaseEntity {
 
   @Column()
   km: number;
+
+  @Column({ type: 'enum', enum: VehicleStatusEnum, nullable: true })
+  status: VehicleStatusEnum | null;
 
   @Column({ name: 'user_id' })
   userId: number;

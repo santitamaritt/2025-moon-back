@@ -12,12 +12,14 @@ import { UserReview } from './infraestructure/entities/user/user-review.entity';
 import { Goal } from './infraestructure/entities/goals/goal.entity';
 import { DiscountCoupon } from './infraestructure/entities/user/discount-coupon.entity';
 import { UserToken } from './infraestructure/entities/user/user-tokens';
+import { Reminder } from './infraestructure/entities/reminder/reminder.entity';
 
 export const entities = [
   User,
   UserPasswordRecovery,
   UserToken,
   Appointment,
+  Reminder,
   Service,
   Vehicle,
   ServiceSparePart,

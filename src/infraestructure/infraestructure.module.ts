@@ -14,6 +14,7 @@ import { SparePartModule } from './rest-api/spare-part/spare-part.module';
 import { NotificationModule } from './rest-api/notification/notification.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { GoalModule } from './rest-api/goal/goal.module';
+import { ReminderModule } from './rest-api/reminder/reminder.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { GoalModule } from './rest-api/goal/goal.module';
     SparePartModule,
     NotificationModule,
     GoalModule,
+    ReminderModule,
     EventEmitterModule.forRoot(),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],

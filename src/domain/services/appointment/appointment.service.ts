@@ -290,6 +290,28 @@ export class AppointmentService implements IAppointmentService {
   }
 
   async handleAppointmentCompleted(event: AppointmentStatusChangedEvent) {
+    if (
+      event.appointment.kmAtService == null &&
+      event.appointment.vehicle &&
+      typeof event.appointment.vehicle.km === 'number'
+    ) {
+      await this.appointmentRepository.setKmAtServiceIfNull(
+        event.appointment.id,
+        event.appointment.vehicle.km,
+      );
+    }
+
+    if (
+      event.appointment.vehicleStatusAtService == null &&
+      event.appointment.vehicle &&
+      event.appointment.vehicle.status != null
+    ) {
+      await this.appointmentRepository.setVehicleStatusAtServiceIfNull(
+        event.appointment.id,
+        event.appointment.vehicle.status,
+      );
+    }
+
     const token = await this.usersTokenService.getTokenOrThrow(
       event.triggeredBy.id,
     );

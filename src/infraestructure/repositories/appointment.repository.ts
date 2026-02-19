@@ -37,6 +37,50 @@ export class AppointmentRepository
     });
   }
 
+  async setKmAtServiceIfNull(
+    appointmentId: number,
+    kmAtService: number,
+  ): Promise<void> {
+    await this.createQueryBuilder()
+      .update(Appointment)
+      .set({ kmAtService })
+      .where('id = :appointmentId', { appointmentId })
+      .andWhere('kmAtService IS NULL')
+      .execute();
+  }
+
+  async setVehicleStatusAtServiceIfNull(
+    appointmentId: number,
+    vehicleStatusAtService: Appointment['vehicleStatusAtService'],
+  ): Promise<void> {
+    await this.createQueryBuilder()
+      .update(Appointment)
+      .set({ vehicleStatusAtService })
+      .where('id = :appointmentId', { appointmentId })
+      .andWhere('vehicleStatusAtService IS NULL')
+      .execute();
+  }
+
+  findLastCompletedAppointmentForService(params: {
+    userId: number;
+    vehicleId: number;
+    serviceId: number;
+  }): Promise<Appointment | null> {
+    const { userId, vehicleId, serviceId } = params;
+    return this.createQueryBuilder('appointment')
+      .leftJoin('appointment.services', 'service')
+      .where('appointment.user_id = :userId', { userId })
+      .andWhere('appointment.vehicle_id = :vehicleId', { vehicleId })
+      .andWhere('appointment.status = :status', {
+        status: AppointmentStatus.COMPLETED,
+      })
+      .andWhere('service.id = :serviceId', { serviceId })
+      .orderBy('appointment.date', 'DESC')
+      .addOrderBy('appointment.time', 'DESC')
+      .addOrderBy('appointment.id', 'DESC')
+      .getOne();
+  }
+
   async deletePendingAppointmentsOfVehicle(id: number): Promise<void> {
     const { today, nowTime } = this.getTodayAndNow();
     await this.createQueryBuilder()

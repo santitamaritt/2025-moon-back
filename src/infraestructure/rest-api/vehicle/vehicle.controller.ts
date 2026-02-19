@@ -18,6 +18,8 @@ import {
 import { AuthenticatedUser } from '../decorators/authenticated-user.decorator';
 import type { JwtPayload } from 'src/infraestructure/dtos/shared/jwt-payload.interface';
 import { UpdateVehicleDto } from 'src/infraestructure/dtos/vehicle/update-vehicle.dto';
+import { AuthenticatedWorkshop } from '../decorators/authenticated-mechanic.decorator';
+import { UpdateVehicleStatusDto } from 'src/infraestructure/dtos/vehicle/update-vehicle-status.dto';
 
 @Controller('vehicle')
 export class VehicleController {
@@ -52,6 +54,15 @@ export class VehicleController {
     @Body() dto: UpdateVehicleDto,
   ) {
     return this.vehicleService.updateVehicleOfUser(user.id, id, dto);
+  }
+
+  @Put(':id/status')
+  updateVehicleStatusAsMechanic(
+    @AuthenticatedWorkshop() _mechanic: JwtPayload,
+    @Param('id', new ParseIntPipe()) id: number,
+    @Body() dto: UpdateVehicleStatusDto,
+  ) {
+    return this.vehicleService.updateVehicleStatusByMechanic(id, dto.status);
   }
 
   @Post()

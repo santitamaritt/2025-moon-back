@@ -20,6 +20,32 @@ export class NotificationRepository
     return this.findOne({ where: { id }, relations: ['user'] });
   }
 
+  findByDedupeKey(dedupeKey: string): Promise<Notification | null> {
+    return this.findOne({ where: { dedupeKey } });
+  }
+
+  async saveIfNotExistsByDedupeKey(params: {
+    userId: number;
+    message: string;
+    dedupeKey: string;
+  }): Promise<boolean> {
+    const existing = await this.findOne({
+      where: {
+        user: { id: params.userId } as any,
+        dedupeKey: params.dedupeKey,
+      },
+      relations: ['user'],
+    });
+    if (existing) return false;
+
+    await this.save({
+      user: { id: params.userId } as any,
+      message: params.message,
+      dedupeKey: params.dedupeKey,
+    });
+    return true;
+  }
+
   async markAsRead(id: number): Promise<void> {
     await this.update(id, { isRead: true });
   }
