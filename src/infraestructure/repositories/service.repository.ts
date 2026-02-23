@@ -44,12 +44,14 @@ export class ServiceRepository
     return this.manager
       .getRepository(Service)
       .createQueryBuilder('s')
-      .innerJoin('s.spareParts', 'ss')
-      .innerJoin('ss.sparePart', 'sp')
+      .leftJoin('s.spareParts', 'ss')
+      .leftJoin('ss.sparePart', 'sp')
       .where('s.mechanicId = :id', { id })
       .andWhere('s.status = :status', { status: ServiceStatusEnum.ACTIVE })
       .groupBy('s.id')
-      .having('MIN(sp.stock - ss.quantity) >= 0')
+      .having(
+        'COUNT(ss.sparePartId) = 0 OR MIN(COALESCE(sp.stock, 0) - COALESCE(ss.quantity, 0)) >= 0',
+      )
       .orderBy('s.id', 'DESC')
       .getMany();
   }
